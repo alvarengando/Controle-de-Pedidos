@@ -25,10 +25,10 @@ function modoNovoPedido() {
     
     spreadsheet.getRange('AL3').setValue(1);    
     spreadsheet.getRange('D1').setValue("Novo");
+    spreadsheet.getRange('AN3').setFormula('=IF(AND(C13="";C16="");"";IF(C16<>"";QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE "&C16&" = I ORDER BY A DESC LIMIT 1");QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE \'"&C13&"\' = D ORDER BY A DESC LIMIT 1")))');
 
-    //spreadsheet.getRangeList(['G7','C13','C16','J7','J10','K12:K15','G15','M7']).clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRangeList(['J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('D4').setFormula('=IF(G7="";"";MAX(\'Pedidos Dados\'!A2:A)+1)');
+    spreadsheet.getRangeList(['C13','C16','J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
+    spreadsheet.getRange('D4').setBackground('#134f5c').setFontColor('#ffffff').clearDataValidations().setFormula('=IF(G7="";"";MAX(\'Pedidos Dados\'!A2:A)+1)');
     spreadsheet.getRange('D5').setFormula('=IF(AND(C16="";G7="");"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))');
     spreadsheet.getRange('D6').setFormula('=IF(K15="";"";NOW())');
 
@@ -57,25 +57,24 @@ function SalvarPedido() {
                                            
         var values = [[Form.getRange('D4').getValue(),    // ID Pedido
                        Form.getRange('D6').getValue(),    // Data Pedido
-                       Form.getRange('D5').getValue(),    // ID Pedido
-                       Form.getRange('G7').getValue(),    // Pedido
+                       Form.getRange('D5').getValue(),    // ID Cliente
+                       Form.getRange('G7').getValue(),    // Cliente
                        Form.getRange('G9').getValue(),    // Logradouro
-                       Form.getRange('H10').getValue(),    // Complemento
+                       Form.getRange('H10').getValue(),   // Complemento
                        Form.getRange('H11').getValue(),   // Município
                        Form.getRange('H12').getValue(),   // Bairro
                        Form.getRange('H13').getValue(),   // Telefone Cadastrado
                        Form.getRange('G15').getValue(),   // Referência
-                       Form.getRange('J7').getValue(),   // Telefone Utilizado
+                       Form.getRange('J7').getValue(),    // Telefone Utilizado
                        Form.getRange('J10').getValue(),   // Motorista
-                       Form.getRange('K12').getValue(),   // Engregue
-                       Form.getRange('K13').getValue(),   // Produto
-                       Form.getRange('K14').getValue(),   // Quantidade
-                       Form.getRange('K15').getValue(),   // Preço
-                       Form.getRange('K16').getValue(),   // Total
-                       Form.getRange('M7').getValue(),   // Status
+                       Form.getRange('K12').getValue(),   // Produto
+                       Form.getRange('K13').getValue(),   // Quantidade
+                       Form.getRange('K14').getValue(),   // Preço
+                       Form.getRange('K15').getValue(),   // Total
+                       Form.getRange('M7').getValue(),    // Status
                      ]];
        
-          PedidosDados.getRange(PedidosDados.getLastRow()+1,1,1,18).setValues(values);
+          PedidosDados.getRange(PedidosDados.getLastRow()+1,1,1,17).setValues(values);
           spreadsheet.getRangeList(['J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
 
           formularPedido();
@@ -85,6 +84,96 @@ function SalvarPedido() {
        } 
          
 };
+
+//Formular editar Pedido
+function formularEditarPedido(){
+  var spreadsheet = SpreadsheetApp.getActive();
+  spreadsheet.getRange('D5').setFormula('=IF(D4="";"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))'); 
+  spreadsheet.getRange('D6').setFormula('=IF(D4="";"";AO4)');
+  spreadsheet.getRange('G7').setFormula('=IF(D4="";"";AQ4)');
+  spreadsheet.getRange('G9').setFormula('=IF(D4="";"";AR4)');
+  spreadsheet.getRange('H10').setFormula('=IF(D4="";"";AS4)');
+  spreadsheet.getRange('H11').setFormula('=IF(D4="";"";AT4)');
+  spreadsheet.getRange('H12').setFormula('=IF(D4="";"";AU4)');
+  spreadsheet.getRange('H13').setFormula('=IF(D4="";"";AV4)');
+  spreadsheet.getRange('G15').setFormula('=IF(D4="";"";AW4)');
+  spreadsheet.getRange('J7').setFormula('=IF(D4="";"";AX4)');
+  spreadsheet.getRange('J10').setFormula('=IF(D4="";"";AY4)');
+  spreadsheet.getRange('K12').setFormula('=IF(D4="";"";AZ4)');
+  spreadsheet.getRange('K13').setFormula('=IF(D4="";"";BA4)');
+  spreadsheet.getRange('K14').setFormula('=IF(D4="";"";BB4)');
+  spreadsheet.getRange('K15').setFormula('=IF(K14="";"";K13*K14)');
+  spreadsheet.getRange('M7').setFormula('=IF(D4="";"";BD4)');
+
+};
+
+//Modo Editar Pedido
+function modoEditarPedido(){
+
+ var spreadsheet = SpreadsheetApp.getActive();
+
+ spreadsheet.getRange('AL3').setValue(2);
+ spreadsheet.getRange('AN3').setFormula('=IF(D4="";"";IF(C16<>"";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A")))');
+ 
+ spreadsheet.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
+ 
+ spreadsheet.getRange('D1').setValue("Editar");
+ //ID Pedido
+ spreadsheet.getRange('D4').setBackground('#ffffff').setFontColor('#000000').setDataValidation(SpreadsheetApp.newDataValidation() .setAllowInvalid(false).requireValueInRange(spreadsheet.getRange('\'Pedidos\'!$BG$4:$BG'), true).build()); 
+ 
+ formularEditarPedido();
+
+ spreadsheet.getRange('C16').activate();
+
+
+};
+
+//Salvar alteração
+function editarPedido(){
+
+  var spreadsheet = SpreadsheetApp.getActive();
+  var Form = spreadsheet.getSheetByName('Pedidos');
+  var PedidosDados = spreadsheet.getSheetByName('Pedidos Dados');
+  var linhaPedido = spreadsheet.getRange('AJ3').getValue(); //linha correspondente em Pedidos dados
+
+   
+  if (spreadsheet.getRange('AK3').getValue() > 0 ) 
+  {
+    Browser.msgBox("Erro", "Necessário preencher todos os campos essenciais!", Browser.Buttons.OK);
+  }
+  
+  else{
+    
+    // Salvar na Página Pedidos Dados
+                                           
+    var values = [[Form.getRange('D6').getValue(),    // Data Pedido
+                   Form.getRange('D5').getValue(),    // ID Cliente
+                   Form.getRange('G7').getValue(),    // Cliente
+                   Form.getRange('G9').getValue(),    // Logradouro
+                   Form.getRange('H10').getValue(),    // Complemento
+                   Form.getRange('H11').getValue(),   // Município
+                   Form.getRange('H12').getValue(),   // Bairro
+                   Form.getRange('H13').getValue(),   // Telefone Cadastrado
+                   Form.getRange('G15').getValue(),   // Referência
+                   Form.getRange('J7').getValue(),    // Telefone Utilizado
+                   Form.getRange('J10').getValue(),   // Motorista
+                   Form.getRange('K12').getValue(),   // Produto
+                   Form.getRange('K13').getValue(),   // Quantidade
+                   Form.getRange('K14').getValue(),   // Preço
+                   Form.getRange('K15').getValue(),   // Total
+                   Form.getRange('M7').getValue(),    // Status
+                 ]];
+       
+          PedidosDados.getRange(linhaPedido, 2, 1, 16).setValues(values);
+
+          Browser.msgBox("Informativo", "Registro alterado com sucesso!", Browser.Buttons.OK);
+          spreadsheet.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
+          formularEditarPedido();
+          spreadsheet.getRange('C16').activate();
+
+    }
+};
+
 
 
 //******************    Finalizador   ******************************************************************
