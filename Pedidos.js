@@ -5,7 +5,8 @@
 function formularPedido(){
 
   var spreadsheet = SpreadsheetApp.getActive(); 
-
+  
+  spreadsheet.getRange('D5').setFormula('=IF(AND(C16="";G7="");"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))');
   spreadsheet.getRange('K15').setFormula('=IF(K14="";"";K13*K14)');
   spreadsheet.getRange('G7').setFormula('=IF(AND(C13="";C16="");"";AQ4)');
   spreadsheet.getRange('G9').setFormula('=IF(AND(C13="";C16="");"";AR4)');
@@ -75,7 +76,7 @@ function SalvarPedido() {
                      ]];
        
           PedidosDados.getRange(PedidosDados.getLastRow()+1,1,1,17).setValues(values);
-          spreadsheet.getRangeList(['J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
+          spreadsheet.getRangeList(['C13','C16','J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
 
           formularPedido();
           Browser.msgBox("Informativo", "Registro salvo com sucesso!", Browser.Buttons.OK);
@@ -88,15 +89,15 @@ function SalvarPedido() {
 //Formular editar Pedido
 function formularEditarPedido(){
   var spreadsheet = SpreadsheetApp.getActive();
-  spreadsheet.getRange('D5').setFormula('=IF(D4="";"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))'); 
+  spreadsheet.getRange('D5').setFormula('=IF(AND(C13="";C16="");"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))'); 
   spreadsheet.getRange('D6').setFormula('=IF(D4="";"";AO4)');
-  spreadsheet.getRange('G7').setFormula('=IF(D4="";"";AQ4)');
-  spreadsheet.getRange('G9').setFormula('=IF(D4="";"";AR4)');
-  spreadsheet.getRange('H10').setFormula('=IF(D4="";"";AS4)');
-  spreadsheet.getRange('H11').setFormula('=IF(D4="";"";AT4)');
-  spreadsheet.getRange('H12').setFormula('=IF(D4="";"";AU4)');
-  spreadsheet.getRange('H13').setFormula('=IF(D4="";"";AV4)');
-  spreadsheet.getRange('G15').setFormula('=IF(D4="";"";AW4)');
+  spreadsheet.getRange('G7').setFormula('=IF(AND(C13="";C16="");"";AQ4)');
+  spreadsheet.getRange('G9').setFormula('=IF(AND(C13="";C16="");"";AR4)');
+  spreadsheet.getRange('H10').setFormula('=IF(AND(C13="";C16="");"";AS4)');
+  spreadsheet.getRange('H11').setFormula('=IF(AND(C13="";C16="");"";AT4)');
+  spreadsheet.getRange('H12').setFormula('=IF(AND(C13="";C16="");"";AU4)');
+  spreadsheet.getRange('H13').setFormula('=IF(AND(C13="";C16="");"";AV4)');
+  spreadsheet.getRange('G15').setFormula('=IF(AND(C13="";C16="");"";AW4)');
   spreadsheet.getRange('J7').setFormula('=IF(D4="";"";AX4)');
   spreadsheet.getRange('J10').setFormula('=IF(D4="";"";AY4)');
   spreadsheet.getRange('K12').setFormula('=IF(D4="";"";AZ4)');
@@ -113,7 +114,7 @@ function modoEditarPedido(){
  var spreadsheet = SpreadsheetApp.getActive();
 
  spreadsheet.getRange('AL3').setValue(2);
- spreadsheet.getRange('AN3').setFormula('=IF(D4="";"";IF(C16<>"";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A")))');
+ spreadsheet.getRange('AN3').setFormula('=IF(AM3="";""; IF(AM3="16";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I");IF(AM3="164";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");IF(AM3="13";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D");IF(AM3="134";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A"))))))');
  
  spreadsheet.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
  
@@ -174,6 +175,51 @@ function editarPedido(){
     }
 };
 
+/**    * ********************************* */
+//Modo Excluir Pedido
+function modoDeletarPedido(){
+
+  var spreadsheet = SpreadsheetApp.getActive();
+
+  spreadsheet.getRange('AL3').setValue(3);
+  spreadsheet.getRange('AN3').setFormula('=IF(AM3="";""; IF(AM3="16";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I");IF(AM3="164";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");IF(AM3="13";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D");IF(AM3="134";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A"))))))');
+  
+  spreadsheet.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
+  
+  spreadsheet.getRange('D1').setValue("Deletar");
+  //ID Pedido
+  spreadsheet.getRange('D4').setBackground('#ffffff').setFontColor('#000000').setDataValidation(SpreadsheetApp.newDataValidation() .setAllowInvalid(false).requireValueInRange(spreadsheet.getRange('\'Pedidos\'!$BG$4:$BG'), true).build()); 
+  
+  formularEditarPedido();
+ 
+  spreadsheet.getRange('C16').activate();
+  
+};
+
+function deletarPedido(){
+
+  var spreadsheet = SpreadsheetApp.getActive();
+  var PedidosDados = spreadsheet.getSheetByName('Pedidos Dados');
+  var linhaPedido = spreadsheet.getRange('AJ3').getValue(); //linha correspondente em Pedidos dados
+
+   
+  if (spreadsheet.getRange('AK3').getValue() > 0 ) 
+  {
+    Browser.msgBox("Erro", "Necessário preencher todos os campos essenciais!", Browser.Buttons.OK);
+  }
+  
+  else{
+           
+        PedidosDados.deleteRow(linhaPedido);
+        spreadsheet.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
+        Browser.msgBox("Informativo", "Registro Deletado com sucesso!", Browser.Buttons.OK);
+        
+       // formularEditarPedido();
+        spreadsheet.getRange('C16').activate();
+
+    }
+
+};
 
 
 //******************    Finalizador   ******************************************************************
