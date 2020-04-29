@@ -44,7 +44,6 @@ function modoNovoPedido() {
 function SalvarPedido() {
   
   var spreadsheet = SpreadsheetApp.getActive();
-  var Form = spreadsheet.getSheetByName('Pedidos');
   var PedidosDados = spreadsheet.getSheetByName('Pedidos Dados');
   
   if (spreadsheet.getRange('AK3').getValue() > 0 ) 
@@ -56,23 +55,23 @@ function SalvarPedido() {
     
     // Sal  var na Página Pedidos Dados
                                            
-        var values = [[Form.getRange('D4').getValue(),    // ID Pedido
-                       Form.getRange('D6').getValue(),    // Data Pedido
-                       Form.getRange('D5').getValue(),    // ID Cliente
-                       Form.getRange('G7').getValue(),    // Cliente
-                       Form.getRange('G9').getValue(),    // Logradouro
-                       Form.getRange('H10').getValue(),   // Complemento
-                       Form.getRange('H11').getValue(),   // Município
-                       Form.getRange('H12').getValue(),   // Bairro
-                       Form.getRange('H13').getValue(),   // Telefone Cadastrado
-                       Form.getRange('G15').getValue(),   // Referência
-                       Form.getRange('J7').getValue(),    // Telefone Utilizado
-                       Form.getRange('J10').getValue(),   // Motorista
-                       Form.getRange('K12').getValue(),   // Produto
-                       Form.getRange('K13').getValue(),   // Quantidade
-                       Form.getRange('K14').getValue(),   // Preço
-                       Form.getRange('K15').getValue(),   // Total
-                       Form.getRange('M7').getValue(),    // Status
+        var values = [[spreadsheet.getRange('D4').getValue(),    // ID Pedido
+                       spreadsheet.getRange('D6').getValue(),    // Data Pedido
+                       spreadsheet.getRange('D5').getValue(),    // ID Cliente
+                       spreadsheet.getRange('G7').getValue(),    // Cliente
+                       spreadsheet.getRange('G9').getValue(),    // Logradouro
+                       spreadsheet.getRange('H10').getValue(),   // Complemento
+                       spreadsheet.getRange('H11').getValue(),   // Município
+                       spreadsheet.getRange('H12').getValue(),   // Bairro
+                       spreadsheet.getRange('H13').getValue(),   // Telefone Cadastrado
+                       spreadsheet.getRange('G15').getValue(),   // Referência
+                       spreadsheet.getRange('J7').getValue(),    // Telefone Utilizado
+                       spreadsheet.getRange('J10').getValue(),   // Motorista
+                       spreadsheet.getRange('K12').getValue(),   // Produto
+                       spreadsheet.getRange('K13').getValue(),   // Quantidade
+                       spreadsheet.getRange('K14').getValue(),   // Preço
+                       spreadsheet.getRange('K15').getValue(),   // Total
+                       spreadsheet.getRange('M7').getValue(),    // Status
                      ]];
        
           PedidosDados.getRange(PedidosDados.getLastRow()+1,1,1,17).setValues(values);
@@ -88,7 +87,9 @@ function SalvarPedido() {
 
 //Formular editar Pedido
 function formularEditarPedido(){
+
   var spreadsheet = SpreadsheetApp.getActive();
+
   spreadsheet.getRange('D5').setFormula('=IF(AND(C13="";C16="");"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))'); 
   spreadsheet.getRange('D6').setFormula('=IF(D4="";"";AO4)');
   spreadsheet.getRange('G7').setFormula('=IF(AND(C13="";C16="");"";AQ4)');
@@ -133,7 +134,6 @@ function modoEditarPedido(){
 function editarPedido(){
 
   var spreadsheet = SpreadsheetApp.getActive();
-  var Form = spreadsheet.getSheetByName('Pedidos');
   var PedidosDados = spreadsheet.getSheetByName('Pedidos Dados');
   var linhaPedido = spreadsheet.getRange('AJ3').getValue(); //linha correspondente em Pedidos dados
 
@@ -147,22 +147,22 @@ function editarPedido(){
     
     // Salvar na Página Pedidos Dados
                                            
-    var values = [[Form.getRange('D6').getValue(),    // Data Pedido
-                   Form.getRange('D5').getValue(),    // ID Cliente
-                   Form.getRange('G7').getValue(),    // Cliente
-                   Form.getRange('G9').getValue(),    // Logradouro
-                   Form.getRange('H10').getValue(),    // Complemento
-                   Form.getRange('H11').getValue(),   // Município
-                   Form.getRange('H12').getValue(),   // Bairro
-                   Form.getRange('H13').getValue(),   // Telefone Cadastrado
-                   Form.getRange('G15').getValue(),   // Referência
-                   Form.getRange('J7').getValue(),    // Telefone Utilizado
-                   Form.getRange('J10').getValue(),   // Motorista
-                   Form.getRange('K12').getValue(),   // Produto
-                   Form.getRange('K13').getValue(),   // Quantidade
-                   Form.getRange('K14').getValue(),   // Preço
-                   Form.getRange('K15').getValue(),   // Total
-                   Form.getRange('M7').getValue(),    // Status
+    var values = [[spreadsheet.getRange('D6').getValue(),    // Data Pedido
+                   spreadsheet.getRange('D5').getValue(),    // ID Cliente
+                   spreadsheet.getRange('G7').getValue(),    // Cliente
+                   spreadsheet.getRange('G9').getValue(),    // Logradouro
+                   spreadsheet.getRange('H10').getValue(),    // Complemento
+                   spreadsheet.getRange('H11').getValue(),   // Município
+                   spreadsheet.getRange('H12').getValue(),   // Bairro
+                   spreadsheet.getRange('H13').getValue(),   // Telefone Cadastrado
+                   spreadsheet.getRange('G15').getValue(),   // Referência
+                   spreadsheet.getRange('J7').getValue(),    // Telefone Utilizado
+                   spreadsheet.getRange('J10').getValue(),   // Motorista
+                   spreadsheet.getRange('K12').getValue(),   // Produto
+                   spreadsheet.getRange('K13').getValue(),   // Quantidade
+                   spreadsheet.getRange('K14').getValue(),   // Preço
+                   spreadsheet.getRange('K15').getValue(),   // Total
+                   spreadsheet.getRange('M7').getValue(),    // Status
                  ]];
        
           PedidosDados.getRange(linhaPedido, 2, 1, 16).setValues(values);
