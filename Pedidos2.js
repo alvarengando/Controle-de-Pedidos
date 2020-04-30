@@ -17,7 +17,8 @@ function formularPedido2(){
   pedidos2.getRange('H13').setFormula('=IF(AND(C13="";C16="");"";AV4)');
   pedidos2.getRange('G15').setFormula('=IF(AND(C13="";C16="");"";AW4)');          
   pedidos2.getRange('M7').setFormula('=IF(D4="";"";"Pendente")');
-  pedidos2.getRange('J7').setFormula('=IF(C16="";"";C16)');
+  pedidos2.getRange('J7').setFormula('=IF(C16="";H13;C16)');
+  pedidos2.getRange('J9').setFormula('=IF(J7="";"";"Telegás")');
 
 };
 
@@ -30,7 +31,7 @@ function modoNovoPedido2() {
     pedidos2.getRange('D1').setValue("Novo");
     pedidos2.getRange('AN3').setFormula('=IF(AND(C13="";C16="");"";IF(C16<>"";QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE "&C16&" = I ORDER BY A DESC LIMIT 1");QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE \'"&C13&"\' = D ORDER BY A DESC LIMIT 1")))');
 
-    pedidos2.getRangeList(['C13','C16','J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
+    pedidos2.getRangeList(['C13','C16','J11','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
     pedidos2.getRange('D4').setBackground('#b45f06').setFontColor('#ffffff').clearDataValidations().setFormula('=IF(G7="";"";MAX(\'Pedidos Dados\'!A2:A)+1)');
     pedidos2.getRange('D5').setFormula('=IF(AND(C16="";G7="");"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))');
     pedidos2.getRange('D6').setFormula('=IF(K15="";"";NOW())');
@@ -69,15 +70,16 @@ function SalvarPedido2() {
                        pedidos2.getRange('H13').getValue(),   // Telefone Cadastrado
                        pedidos2.getRange('G15').getValue(),   // Referência
                        pedidos2.getRange('J7').getValue(),    // Telefone Utilizado
-                       pedidos2.getRange('J10').getValue(),   // Motorista
+                       pedidos2.getRange('J11').getValue(),   // Motorista
                        pedidos2.getRange('K12').getValue(),   // Produto
                        pedidos2.getRange('K13').getValue(),   // Quantidade
                        pedidos2.getRange('K14').getValue(),   // Preço
                        pedidos2.getRange('K15').getValue(),   // Total
                        pedidos2.getRange('M7').getValue(),    // Status
+                       pedidos2.getRange('J9').getValue(),   // Canal de Venda
                      ]];
        
-          PedidosDados.getRange(PedidosDados.getLastRow()+1,1,1,17).setValues(values);
+          PedidosDados.getRange(PedidosDados.getLastRow()+1,1,1,18).setValues(values);
           pedidos2.getRangeList(['C13','C16','J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
 
           formularPedido();
@@ -240,17 +242,17 @@ function FinalizadorPedido2(){
 
   if(pedidos2.getRange('AL3').getValue() == 1)
   {
-      SalvarPedido();
+      SalvarPedido2();
   }
                       
   else if(pedidos2.getRange('AL3').getValue() == 2)
    {
-         editarPedido();
+         editarPedido2();
    }
                       
    else
    {
-    deletarPedido(); 
+    deletarPedido2(); 
    } 
 
 
