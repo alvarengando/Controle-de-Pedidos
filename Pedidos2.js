@@ -31,7 +31,7 @@ function modoNovoPedido2() {
     pedidos2.getRange('D1').setValue("Novo");
     pedidos2.getRange('AN3').setFormula('=IF(AND(C13="";C16="");"";IF(C16<>"";QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE "&C16&" = I ORDER BY A DESC LIMIT 1");QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE \'"&C13&"\' = D ORDER BY A DESC LIMIT 1")))');
 
-    pedidos2.getRangeList(['C13','C16','J11','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
+    pedidos2.getRangeList(['C13','C16','J11','K12:K15','M10']).clear({contentsOnly: true, skipFilteredRows: true});
     pedidos2.getRange('D4').setBackground('#b45f06').setFontColor('#ffffff').clearDataValidations().setFormula('=IF(G7="";"";MAX(\'Pedidos Dados\'!A2:A)+1)');
     pedidos2.getRange('D5').setFormula('=IF(AND(C16="";G7="");"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))');
     pedidos2.getRange('D6').setFormula('=IF(K15="";"";NOW())');
@@ -76,11 +76,11 @@ function SalvarPedido2() {
                        pedidos2.getRange('K14').getValue(),   // Preço
                        pedidos2.getRange('K15').getValue(),   // Total
                        pedidos2.getRange('M7').getValue(),    // Status
-                       pedidos2.getRange('J9').getValue(),   // Canal de Venda
+                       pedidos2.getRange('J9').getValue()   // Canal de Venda
                      ]];
        
           PedidosDados.getRange(PedidosDados.getLastRow()+1,1,1,18).setValues(values);
-          pedidos2.getRangeList(['C13','C16','J10','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
+          pedidos2.getRangeList(['C13','C16','J11','K12:K15']).clear({contentsOnly: true, skipFilteredRows: true});
 
           formularPedido();
           Browser.msgBox("Informativo", "Registro salvo com sucesso!", Browser.Buttons.OK);
@@ -106,7 +106,8 @@ function formularEditarPedido2(){
   pedidos2.getRange('H13').setFormula('=IF(AND(C13="";C16="");"";AV4)');
   pedidos2.getRange('G15').setFormula('=IF(AND(C13="";C16="");"";AW4)');
   pedidos2.getRange('J7').setFormula('=IF(D4="";"";AX4)');
-  pedidos2.getRange('J10').setFormula('=IF(D4="";"";AY4)');
+  pedidos2.getRange('J11').setFormula('=IF(D4="";"";AY4)');
+  pedidos2.getRange('J9').setFormula('=IF(D4="";"";BE4)');
   pedidos2.getRange('K12').setFormula('=IF(D4="";"";AZ4)');
   pedidos2.getRange('K13').setFormula('=IF(D4="";"";BA4)');
   pedidos2.getRange('K14').setFormula('=IF(D4="";"";BB4)');
@@ -122,7 +123,7 @@ function modoEditarPedido2(){
  var pedidos2 = spreadsheet.getSheetByName('Pedidos 2');
 
  pedidos2.getRange('AL3').setValue(2);
- pedidos2.getRange('AN3').setFormula('=IF(AM3="";""; IF(AM3="16";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I");IF(AM3="164";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");IF(AM3="13";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D");IF(AM3="134";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A"))))))');
+ pedidos2.getRange('AN3').setFormula('=IF(AM3="";""; IF(AM3="16";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE "&C16&" = I");IF(AM3="164";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");IF(AM3="13";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE \'"&C13&"\' = D");IF(AM3="134";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A"))))))');
  
  pedidos2.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
  
@@ -144,14 +145,19 @@ function editarPedido2(){
   var pedidos2 = spreadsheet.getSheetByName('Pedidos 2');
   var PedidosDados = spreadsheet.getSheetByName('Pedidos Dados');
   var linhaPedido = pedidos2.getRange('AJ3').getValue(); //linha correspondente em Pedidos dados
-
+  var contVazioPedi = pedidos2.getRange('AK3').getValue();
+  var status = pedidos2.getRange('AI3').getValue();
    
-  if (pedidos2.getRange('AK3').getValue() > 0 ) 
+  if (contVazioPedi > 0 || status == 1) 
   {
-    Browser.msgBox("Erro", "Necessário preencher todos os campos essenciais!", Browser.Buttons.OK);
-  }
-  
-  else{
+     if (contVazioPedi > 0) {
+      Browser.msgBox("Erro", "Necessário preencher todos os campos essenciais!", Browser.Buttons.OK);
+        }else{
+          Browser.msgBox("Erro", "Necessário preencher a justificativa do Cancelamento!", Browser.Buttons.OK);
+        }
+
+    
+  }else{
     
     // Salvar na Página Pedidos Dados
                                            
@@ -165,19 +171,21 @@ function editarPedido2(){
                    pedidos2.getRange('H13').getValue(),   // Telefone Cadastrado
                    pedidos2.getRange('G15').getValue(),   // Referência
                    pedidos2.getRange('J7').getValue(),    // Telefone Utilizado
-                   pedidos2.getRange('J10').getValue(),   // Motorista
+                   pedidos2.getRange('J11').getValue(),   // Motorista
                    pedidos2.getRange('K12').getValue(),   // Produto
                    pedidos2.getRange('K13').getValue(),   // Quantidade
                    pedidos2.getRange('K14').getValue(),   // Preço
                    pedidos2.getRange('K15').getValue(),   // Total
                    pedidos2.getRange('M7').getValue(),    // Status
+                   pedidos2.getRange('J9').getValue(),   // Canal de Venda
+                   pedidos2.getRange('M10').getValue()   // Justificativa
                  ]];
        
-          PedidosDados.getRange(linhaPedido, 2, 1, 16).setValues(values);
+          PedidosDados.getRange(linhaPedido, 2, 1, 18).setValues(values);
 
           Browser.msgBox("Informativo", "Registro alterado com sucesso!", Browser.Buttons.OK);
-          pedidos2.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
-          formularEditarPedido();
+          pedidos2.getRangeList(['D4','C13','C16','M10']).clear({contentsOnly: true, skipFilteredRows: true});
+          formularEditarPedido2();
           pedidos2.getRange('C16').activate();
 
     }
@@ -191,7 +199,7 @@ function modoDeletarPedido2(){
   var pedidos2 = spreadsheet.getSheetByName('Pedidos 2');
 
   pedidos2.getRange('AL3').setValue(3);
-  pedidos2.getRange('AN3').setFormula('=IF(AM3="";""; IF(AM3="16";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I");IF(AM3="164";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");IF(AM3="13";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D");IF(AM3="134";QUERY(\'Pedidos Dados\'!A:Q;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A"))))))');
+  pedidos2.getRange('AN3').setFormula('=IF(AM3="";""; IF(AM3="16";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE "&C16&" = I");IF(AM3="164";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE "&C16&" = I AND "&D4&" = A");IF(AM3="13";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE \'"&C13&"\' = D");IF(AM3="134";QUERY(\'Pedidos Dados\'!A:S;"SELECT * WHERE \'"&C13&"\' = D AND "&D4&" = A"))))))');
   
   pedidos2.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
   
@@ -199,7 +207,7 @@ function modoDeletarPedido2(){
   //ID Pedido
   pedidos2.getRange('D4').setBackground('#ffffff').setFontColor('#000000').setDataValidation(SpreadsheetApp.newDataValidation() .setAllowInvalid(false).requireValueInRange(spreadsheet.getRange('\'Pedidos 2\'!$BG$4:$BG'), true).build()); 
   
-  formularEditarPedido();
+  formularEditarPedido2();
  
   pedidos2.getRange('C16').activate();
   
@@ -221,10 +229,9 @@ function deletarPedido2(){
   else{
            
         PedidosDados.deleteRow(linhaPedido);
-        pedidos2.getRangeList(['D4','C13','C16']).clear({contentsOnly: true, skipFilteredRows: true});
+        pedidos2.getRangeList(['D4','C13','C16','J11','M10']).clear({contentsOnly: true, skipFilteredRows: true});
         Browser.msgBox("Informativo", "Registro Deletado com sucesso!", Browser.Buttons.OK);
         
-       // formularEditarPedido();
         pedidos2.getRange('C16').activate();
 
     }
@@ -235,7 +242,7 @@ function deletarPedido2(){
 //******************    Finalizador   ******************************************************************
 
 
-function FinalizadorPedido2(){
+function finalizadorPedido2(){
 
   var spreadsheet = SpreadsheetApp.getActive();
   var pedidos2 = spreadsheet.getSheetByName('Pedidos 2');
