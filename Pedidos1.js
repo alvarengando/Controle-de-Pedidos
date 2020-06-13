@@ -32,7 +32,7 @@ function modoNovoPedido1() {
   pedidos1.getRange('D1').setValue("Novo");
   pedidos1.getRange('AN3').setFormula('=IF(AND(C13="";C16="");"";IF(C16<>"";QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE "&C16&" = I ORDER BY A DESC LIMIT 1");QUERY(\'Pedidos Dados\'!A:K;"SELECT * WHERE \'"&C13&"\' = D ORDER BY A DESC LIMIT 1")))');
 
-  pedidos1.getRangeList(['C13', 'C16', 'J11', 'K12:K15', 'M10']).clear({ contentsOnly: true, skipFilteredRows: true });
+  pedidos1.getRangeList(['C13', 'C16', 'J11', 'K12:K16', 'M10']).clear({ contentsOnly: true, skipFilteredRows: true });
   pedidos1.getRange('D4').setBackground('#134f5c').setFontColor('#ffffff').clearDataValidations().setFormula('=IF(G7="";"";MAX(\'Pedidos Dados\'!A2:A)+1)');
   pedidos1.getRange('D5').setFormula('=IF(AND(C16="";G7="");"";IF(AP4="";COUNTA(\'Pedidos Dados\'!C2:C)+1;AP4))');
 

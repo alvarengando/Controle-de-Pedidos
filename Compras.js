@@ -4,7 +4,7 @@ function reformularCompraNova(){
   
     var spreadsheet = SpreadsheetApp.getActive();
     
-    spreadsheet.getRange('D4').setBackground('#76a5af').clearDataValidations().setFormula('=IF(G5="";"";MAX(\'Compras Dados\'!A2:A)+1)');
+    spreadsheet.getRange('D4').setBackground('#6d9eeb').clearDataValidations().setFormula('=IF(G5="";"";MAX(\'Compras Dados\'!A2:A)+1)');
     spreadsheet.getRange('D5').setFormula('=IF(G5="";"";IF(COUNTIF(\'Compras Dados\'!C2:C;G5) >= 1;LOOKUP(G5;\'Compras Dados\'!C2:C;\'Compras Dados\'!B2:B);MAX(\'Compras Dados\'!B2:B)+1))');
     
     spreadsheet.getRange('H6').setFormula('=IF(G5="";"";Today())');
